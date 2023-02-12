@@ -1,6 +1,6 @@
 import { Redis } from "ioredis";
 import DataLoader from "dataloader";
-import { entries, zipObject } from "lodash";
+import { zip } from "lodash";
 
 class RedisDataLoader {
   redis: Redis;
@@ -22,9 +22,11 @@ class RedisDataLoader {
           });
           const finalValues = await Promise.all(promises);
           const strFinalValues = finalValues.map((v) => JSON.stringify(v));
-          const obj = zipObject(keys, strFinalValues);
+          const zippedObj = zip(keys, values, strFinalValues).filter(
+            ([_, cachedValue, finalValue]) => cachedValue !== finalValue
+          );
           let pipeline = redis.pipeline();
-          for (const [key, value] of entries(obj)) {
+          for (const [key, _, value] of zippedObj) {
             pipeline = pipeline.set(key, value, "EX", 3600);
           }
           await pipeline.exec();

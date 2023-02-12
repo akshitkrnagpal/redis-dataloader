@@ -50,7 +50,6 @@ class RedisDataLoader {
   }
 
   load(loaderName: string, loaderKey: string) {
-    console.log("load", loaderName, loaderKey);
     this.loader.load(`${loaderName}:${loaderKey}`);
   }
 

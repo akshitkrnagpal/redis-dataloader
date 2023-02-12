@@ -52,7 +52,7 @@ class RedisDataLoader {
   }
 
   load(loaderName: string, loaderKey: string) {
-    this.loader.load(`${loaderName}:${loaderKey}`);
+    return this.loader.load(`${loaderName}:${loaderKey}`);
   }
 
   flushAll() {

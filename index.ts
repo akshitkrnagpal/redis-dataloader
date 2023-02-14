@@ -41,18 +41,18 @@ class RedisDataLoader {
     this.loaders = new Map();
   }
 
-  has(loaderName: string) {
-    return this.loaders.has(loaderName);
+  has(name: string) {
+    return this.loaders.has(name);
   }
 
-  add(loaderName: string, loader: DataLoader<any, any>) {
-    if (this.loaders.has(loaderName))
-      throw Error(`Loader with name '${loaderName}' already exists.`);
-    this.loaders.set(loaderName, loader);
+  add(name: string, batchLoadFn: DataLoader.BatchLoadFn<any, any>) {
+    if (this.loaders.has(name))
+      throw Error(`Loader with name '${name}' already exists.`);
+    this.loaders.set(name, new DataLoader(batchLoadFn, { cache: false }));
   }
 
-  load(loaderName: string, loaderKey: string) {
-    return this.loader.load(`${loaderName}:${loaderKey}`);
+  load(name: string, key: string) {
+    return this.loader.load(`${name}:${key}`);
   }
 
   flushAll() {
